@@ -63,7 +63,7 @@ object TraverserHook {
   class TmpHook(override val global: Global) extends TraverserHook(global) {
     println("TmpHook Created")
     override def traverse(prev: Phase, unit: global.CompilationUnit) = {
-      println("TmpHook In Action: " + prev + " " + unit)
+      println(s"TmpHook In Action: $prev $unit")
     }
   }
 

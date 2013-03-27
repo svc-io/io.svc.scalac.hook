@@ -11,7 +11,7 @@ object Println {
   class PrintlnHook(override val global: Global) extends TraverserHook(global) {
     println("PrintlnHook Created")
     override def traverse(prev: Phase, unit: global.CompilationUnit) = {
-      println("PrintlnHook In Action: " + prev + " " + unit)
+      println(s"PrintlnHook In Action: $prev $unit")
     }
   }
 
