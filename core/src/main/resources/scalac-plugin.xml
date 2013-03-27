@@ -1,0 +1,4 @@
+<plugin>
+  <name>hook</name>
+  <classname>io.svc.scalac.hook.HookPlugin</classname>
+</plugin>
