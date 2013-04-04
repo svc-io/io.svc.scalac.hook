@@ -26,6 +26,13 @@ $ scala \
   -P:hook:io.svc.scalac.hook.example.traverser.Println.PrintlnHook
 ```
 
+## Usage via SBT
+
+```
+$ sbt console
+```
+
+
 ## Create your own hook
 
 See the [Println example](https://github.com/svc-io/io.svc.scalac.hook/blob/master/examples/src/main/scala/io/svc/scalac/hook/example/traverser/Println.scala) 
