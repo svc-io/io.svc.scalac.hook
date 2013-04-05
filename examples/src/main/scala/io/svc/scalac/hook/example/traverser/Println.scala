@@ -8,10 +8,12 @@ import tools.nsc._
  */
 object Println {
 
-  class PrintlnHook(override val global: Global) extends TraverserHook(global) {
+  class PrintlnHook[G <: Global](override val global: G, val prev: Phase) extends TraverserHook(global, prev) {
     println("PrintlnHook Created")
-    override def traverse(prev: Phase, unit: global.CompilationUnit) = {
-      println(s"PrintlnHook In Action: $prev $unit")
+    override val traverser = new global.Traverser {
+      override def traverse(tree: global.Tree): Unit = {
+        println(s"PrintlnHook In Action: $prev ${tree.symbol}")
+      }
     }
   }
 

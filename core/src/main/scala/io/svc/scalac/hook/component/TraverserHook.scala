@@ -30,17 +30,11 @@ object TraverserHook {
       }
     }
 
-    def newTraverser(prev: Phase, unit: CompilationUnit): Traverser = {
-      new Traverser {
-        override def traverse(tree: Tree): Unit = {
-          newHook(hookName).traverse(prev, unit)
-        }
-      }
-    }
+    def newTraverser(prev: Phase, unit: CompilationUnit): Traverser = newHook(hookName, prev).traverser
 
-    implicit def newHook(name: String): TraverserHook[global.type] = createHook[global.type](name)
+    implicit def newHook(name: String, prev: Phase): TraverserHook[global.type] = createHook[global.type](name, prev)
 
-    def createHook[G <: Global](name: String): TraverserHook[G] = {
+    def createHook[G <: Global](name: String, prev: Phase): TraverserHook[G] = {
       val mirror = ru.runtimeMirror(getClass.getClassLoader)
 
       val classSym = mirror.staticClass(name)
@@ -49,22 +43,12 @@ object TraverserHook {
       val ctor = classSym.typeSignature.member(ru.nme.CONSTRUCTOR).asMethod
       val ctorMirror = classMirror.reflectConstructor(ctor)
 
-      ctorMirror.apply(global).asInstanceOf[TraverserHook[G]]
+      ctorMirror.apply(global, prev).asInstanceOf[TraverserHook[G]]
     }
   }
-
-  implicit def TraverserHook(global: Global): TraverserHook[global.type] = new TraverserHook[global.type](global)
 
   // Cannot get it working with an abstract class here..
-  class TraverserHook[G <: Global](val global: G) {
-     def traverse(prev: Phase, unit: global.CompilationUnit): Unit = ???
+  class TraverserHook[G <: Global](val global: G, prev: Phase) {
+    val traverser: global.Traverser = new global.Traverser
   }
-
-  class TmpHook(override val global: Global) extends TraverserHook(global) {
-    println("TmpHook Created")
-    override def traverse(prev: Phase, unit: global.CompilationUnit) = {
-      println(s"TmpHook In Action: $prev $unit")
-    }
-  }
-
 }
